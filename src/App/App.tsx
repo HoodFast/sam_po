@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import logo from './logo.svg';
+import logo from '../logo.svg';
 import './App.css';
-import {todoAPI} from "./api/todo-api";
+import {todoAPI} from "../api/todo-api";
 
 function App() {
     const [data, setData] = useState('')
