@@ -12,7 +12,7 @@ function App() {
     const updateTitle = () => {
         todoAPI.updateToDoTitle('be6b02c1-3451-4e7f-ad45-d0d2d3ae666f', data).then((res) => {
             console.log(res)
-        }).then(() => todoAPI.getToDoLists().then((res) => setValue(res.data[0])))
+        }).then(() => todoAPI.getToDoLists().then((res) => setValue(res.data[0].title)))
     }
 
     return (
