@@ -1,6 +1,6 @@
 import {applyMiddleware, combineReducers, legacy_createStore, AnyAction} from "redux";
 import thunkMiddleware, {ThunkDispatch} from 'redux-thunk'
-import {TypedUseSelectorHook, useDispatch} from "react-redux";
+import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 
 const rootReducer = combineReducers({})
 
