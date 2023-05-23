@@ -1,19 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import logo from '../logo.svg';
+import React from 'react';
+
 import './App.css';
-import {todoAPI} from "../api/todo-api";
+
 import {ToDoLists} from "../features/TodoLists/ToDoLists";
-import {AddToDoForm} from "../components/AddToDoForm/AddToDoForm";
+import {AddForm} from "../components/AddForm/AddForm";
+import {AppUseDispatch} from "./store";
+import {addTodo} from "../features/TodoLists/todoList-reducer";
+
 
 function App() {
-
-
-    return (
-        <div>
-            <AddToDoForm/>
-           <ToDoLists/>
-        </div>
-    );
+    return <ToDoLists/>
 }
 
 export default App;

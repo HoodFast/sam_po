@@ -1,6 +1,10 @@
 import { useFormik } from "formik"
+import React from "react";
 
-export const AddToDoForm = () => {
+type PropsAddForm={
+    callBack:(value:string)=>void
+}
+export const AddForm:React.FC<PropsAddForm> = ({callBack}) => {
 
     const formik = useFormik({
         validate:(values)=>{
@@ -12,7 +16,7 @@ export const AddToDoForm = () => {
             value: '',
         },
         onSubmit: values => {
-            alert(JSON.stringify(values.value))
+            callBack(values.value)
         }
     })
 
