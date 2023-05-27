@@ -15,8 +15,9 @@ export const AddForm:React.FC<PropsAddForm> = ({callBack}) => {
         initialValues: {
             value: '',
         },
-        onSubmit: values => {
+        onSubmit: (values,FormikHelpers) => {
             callBack(values.value)
+            FormikHelpers.resetForm({values:{value:''}})
         }
     })
 

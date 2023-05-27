@@ -30,7 +30,7 @@ export const ToDoLists = () => {
     return (
         <>
             <AddForm callBack={addNewTodo}/>
-            <Grid container spacing={2}>
+            <Grid container >
                 {toDo}
             </Grid>
         </>
