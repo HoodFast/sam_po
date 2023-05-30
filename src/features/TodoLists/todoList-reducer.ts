@@ -11,7 +11,7 @@ type ToDoDomainType = ToDoType & { filter: string }
 export const todoListReducer = (state: ToDoDomainType[] = [], action: ToDoActionsType): ToDoDomainType[] => {
     switch (action.type) {
         case ADD_TODO:
-            return [...state, {...action.payload.toDoList, filter: 'all'}]
+            return [{...action.payload.toDoList, filter: 'all'},...state]
         case FETCH_TODO:
             return [...action.payload.toDoLists.map(tl => ({...tl, filter: 'all'}))]
         case REMOVE_TODO:

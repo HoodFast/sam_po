@@ -1,4 +1,4 @@
-import {TaskPriorities, TaskStatuses, TaskType, todoAPI} from "../../../api/todo-api";
+import {ResultCode, TaskPriorities, TaskStatuses, TaskType, todoAPI} from "../../../api/todo-api";
 import {Dispatch} from "redux";
 import {ADD_TODO, addToDoAC, REMOVE_TODO, removeTodoAC} from "../todoList-reducer";
 import {RootStateType} from "../../../App/store";
@@ -7,6 +7,7 @@ const FETCH_TASKS = "FETCH_TASKS"
 const CREATE_TASK = "CREATE_TASK"
 const REMOVE_TASK = "REMOVE_TASK"
 const UPDATE_TASK = "UPDATE_TASK"
+const CHANGE_STATUS_TASK="CHANGE_STATUS_TASK"
 
 export type tasksStateType = {
     [key: string]: TaskType[]
@@ -37,6 +38,8 @@ export const taskReducer = (state = initState, action: TaskActionTypes): tasksSt
                     title: action.payload.newTitle
                 } : i)
             }
+        case CHANGE_STATUS_TASK:
+            return {...state,[action.payload.todoId]:state[action.payload.todoId].map(i=>i.id===action.payload.taskId?{...i,status:action.payload.status} :i)}
         default:
             return state
     }
@@ -49,6 +52,7 @@ type TaskActionTypes =
     | ReturnType<typeof createTaskAC>
     | ReturnType<typeof removeTaskAC>
     | ReturnType<typeof updateTaskAC>
+    | ReturnType<typeof changeStatusTaskAC>
 
 
 const fetchTasksAC = (todoId: string, tasks: TaskType[]) => {
@@ -63,6 +67,10 @@ const removeTaskAC = (todoId: string, taskId: string) => {
 
 const updateTaskAC = (todoId: string, taskId: string, newTitle: string) => {
     return {type: UPDATE_TASK, payload: {todoId, taskId, newTitle}} as const
+}
+
+const changeStatusTaskAC = (todoId:string,taskId:string,status:TaskStatuses)=>{
+    return {type:CHANGE_STATUS_TASK,payload:{todoId,taskId,status}} as const
 }
 
 
@@ -102,6 +110,20 @@ export const updateTaskTC = (todoId: string, taskId: string, title: string) => {
             todoAPI.updateTask(todoId, taskId, updateTask).then(data => {
                 if (data.resultCode === 0) {
                     dispatch(updateTaskAC(data.data.item.todoListId, data.data.item.id, data.data.item.title))
+                }
+            })
+        }
+    }
+}
+
+export const changeTaskStatusTC = (todoId: string, taskId: string,status:TaskStatuses)=>{
+    return (dispatch:Dispatch,getState: () => RootStateType)=>{
+        const task=getState().tasks[todoId].find(i => i.id === taskId)
+        if(task) {
+            const updateTask: TaskType = {...task, status}
+            todoAPI.updateTask(todoId, taskId, updateTask).then(data=>{
+                if(data.resultCode===ResultCode.OK){
+                    dispatch(changeStatusTaskAC(todoId,taskId,status))
                 }
             })
         }
