@@ -8,7 +8,7 @@ type spanProps={
 
 export const SuperSpan:React.FC<spanProps>=({value,callback})=>{
     const [open,setOpen]=useState(false)
-    const [newTitle,setTitle]=useState('')
+    const [newTitle,setTitle]=useState(value)
 
     const openHandler=()=>{
         setOpen(true)

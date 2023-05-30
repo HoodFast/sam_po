@@ -4,38 +4,40 @@ import {SuperSpan} from "../../../components/SuperSpan/SuperSpan";
 import {TaskStatuses} from "../../../api/todo-api";
 
 type TaskProps = {
-    id:string
+    taskId: string
+    todoId: string
     taskTitle: string
-    status:TaskStatuses
-    deleteTask:(id:string)=>void
-    updateTask:(taskId:string,title:string)=>void
-    updateStatusTask:(taskId:string,status:TaskStatuses)=>void
+    status: TaskStatuses
+    deleteTask: (todoId: string, taskId: string) => void
+    updateTask: (todoId: string, taskId: string, title: string) => void
+    updateStatusTask: (todoId: string, taskId: string, status: TaskStatuses) => void
 }
 
 export const Task: React.FC<TaskProps> = (
     {
-        id,
+        taskId,
+        todoId,
         taskTitle,
         status,
         deleteTask,
         updateTask,
         updateStatusTask
     }) => {
-    const deleteTaskHandler=()=>{
-        deleteTask(id)
+    const deleteTaskHandler = () => {
+        deleteTask(todoId, taskId)
     }
-    const updateTaskHandler=(title:string)=>{
-        updateTask(id,title)
+    const updateTaskHandler = (title: string) => {
+        updateTask(todoId, taskId, title)
     }
-    const changeStatusTask=()=>{
-        const newStatus=status===TaskStatuses.InProgress?TaskStatuses.Completed:TaskStatuses.InProgress
-        updateStatusTask(id,newStatus)
+    const changeStatusTask = () => {
+        const newStatus = status === TaskStatuses.New ? TaskStatuses.Completed : TaskStatuses.New
+        updateStatusTask(todoId, taskId, newStatus)
     }
     return (
-        <div style={{margin:'10px', display:'flex'}}>
-            <input onChange={changeStatusTask} type={"checkbox"} checked={status===TaskStatuses.InProgress?false:true} />
+        <div style={{margin: '10px', display: 'flex'}}>
+            <input onChange={changeStatusTask} type={"checkbox"} checked={status === TaskStatuses.Completed}/>
             <SuperSpan callback={updateTaskHandler} value={taskTitle}/>
-            <Button onClick={deleteTaskHandler}>+</Button>
+            <Button onClick={deleteTaskHandler}>x</Button>
         </div>
 
     )

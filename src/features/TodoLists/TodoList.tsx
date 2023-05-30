@@ -1,65 +1,78 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {AppUseDispatch, useAppSelector} from "../../App/store";
 import {changeTaskStatusTC, createTaskTC, fetchTasks, removeTaskTC, updateTaskTC} from "./Tasks/task-reduser";
 import {Box, Button, Grid, IconButton, Paper} from "@mui/material";
-import {removeToDo} from "./todoList-reducer";
+import {changeFilterAC, FilterType, removeToDo, updateTodoTitleTC} from "./todoList-reducer";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Tasks/Task";
 import {AddForm} from "../../components/AddForm/AddForm";
 import {SuperSpan} from "../../components/SuperSpan/SuperSpan";
-import {TaskStatuses} from "../../api/todo-api";
+import {TaskStatuses, TaskType} from "../../api/todo-api";
 
 
 type PropsType = {
-    id: string
+    todoListId: string
     title: string
+    filter: FilterType
 }
 
 export const TodoList: React.FC<PropsType> = ({
-                                                  id,
-                                                  title
+                                                  todoListId,
+                                                  title,
+                                                  filter
                                               }) => {
 
     const dispatch = AppUseDispatch()
-    const tasks = useAppSelector(state => state.tasks)
+    let tasks = useAppSelector(state => state.tasks)
     useEffect(() => {
-        dispatch(fetchTasks(id))
+        dispatch(fetchTasks(todoListId))
     }, [])
 
 
     const deleteToDo = () => {
-        dispatch(removeToDo(id))
+        dispatch(removeToDo(todoListId))
     }
-    const updateTodoTitle = () => {
-
+    const updateTodoTitle = (newTitle: string) => {
+        dispatch(updateTodoTitleTC(todoListId, newTitle))
     }
 
     const createTask = (taskTitle: string) => {
-        dispatch(createTaskTC(id, taskTitle))
+        dispatch(createTaskTC(todoListId, taskTitle))
     }
 
-    const deleteTask = (taskId: string) => {
-        dispatch(removeTaskTC(id, taskId))
+    const deleteTask = (todoId: string, taskId: string) => {
+        dispatch(removeTaskTC(todoId, taskId))
     }
 
-    const updateTask = (taskId: string, title: string) => {
-        dispatch(updateTaskTC(id, taskId, title))
+    const updateTask = (todoId: string, taskId: string, title: string) => {
+        dispatch(updateTaskTC(todoId, taskId, title))
     }
 
-    const updateStatusTask = (taskId: string, status: TaskStatuses) => {
-        dispatch(changeTaskStatusTC(id, taskId, status))
+    const updateStatusTask = (todoId: string, taskId: string, status: TaskStatuses) => {
+        dispatch(changeTaskStatusTC(todoId, taskId, status))
+    }
+
+    let filterTasks = tasks[todoListId]
+
+    if (filter === 'active') {
+        filterTasks = tasks[todoListId].filter(i => i.status ===  TaskStatuses.New)
+    }
+    if (filter === 'completed') {
+        filterTasks = tasks[todoListId].filter(i => i.status === TaskStatuses.Completed)
     }
 
 
-    const task = tasks[id] && tasks[id].map(i => <Task
+    const task =!!filterTasks && filterTasks.map(i => <Task
         key={i.id}
-        id={i.id}
+        taskId={i.id}
+        todoId={i.todoListId}
         taskTitle={i.title}
         deleteTask={deleteTask}
         updateTask={updateTask}
         updateStatusTask={updateStatusTask}
         status={i.status}
     />)
+
 
     return (
         <Grid item style={{margin: '10px'}}>
@@ -85,7 +98,9 @@ export const TodoList: React.FC<PropsType> = ({
                         {task}
                     </div>
 
-
+                    <Button onClick={() => dispatch(changeFilterAC(todoListId, 'all'))}>ALL</Button>
+                    <Button onClick={() => dispatch(changeFilterAC(todoListId, 'active'))}>Active</Button>
+                    <Button onClick={() => dispatch(changeFilterAC(todoListId, 'completed'))}>Completed</Button>
                 </Paper>
             </Box>
 
