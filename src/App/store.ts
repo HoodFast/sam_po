@@ -3,8 +3,10 @@ import thunkMiddleware, {ThunkDispatch} from 'redux-thunk'
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import {todoListReducer} from "../features/TodoLists/todoList-reducer";
 import {taskReducer} from "../features/TodoLists/Tasks/task-reduser";
+import {appReducer} from "./app-reduser";
 
 const rootReducer = combineReducers({
+    app:appReducer,
     toDoLists:todoListReducer,
     tasks:taskReducer
 })

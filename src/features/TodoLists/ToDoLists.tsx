@@ -18,10 +18,7 @@ export const ToDoLists = () => {
 
     }, [])
 
-    const addNewTodo = (NewTitle: string) => {
-        const thunk=addTodo(NewTitle)
-        dispatch(thunk)
-    }
+
 
     const toDo = toDoLists.map(i => <TodoList key={i.id}
                                               todoListId={i.id}
@@ -31,7 +28,6 @@ export const ToDoLists = () => {
     />)
     return (
         <>
-            <AddForm callBack={addNewTodo}/>
             <Grid container >
                 {toDo}
             </Grid>

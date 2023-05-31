@@ -1,5 +1,6 @@
 import {todoAPI, ToDoType} from "../../api/todo-api";
 import {Dispatch} from "redux";
+import {setStatusAC} from "../../App/app-reduser";
 
 export const ADD_TODO = 'ADD_TODO'
 const FETCH_TODO = 'FETCH_TODO'
@@ -66,9 +67,14 @@ export const fetchToDoLists = () => {
 
 export const addTodo = (title: string) => {
     return (dispatch: Dispatch) => {
-        todoAPI.createToDoList(title).then((data) => {
-            dispatch(addToDoAC(data.data.item))
-        })
+        dispatch(setStatusAC('loading'))
+        setTimeout(()=>{
+            todoAPI.createToDoList(title).then((data) => {
+                dispatch(addToDoAC(data.data.item))
+                dispatch(setStatusAC('success'))
+            })
+        },2000)
+
     }
 }
 
@@ -83,7 +89,6 @@ export const removeToDo = (todoId: string) => {
 export const updateTodoTitleTC=(todoId: string,newTitle:string)=>{
     return (dispatch:Dispatch)=>{
         todoAPI.updateToDoTitle(todoId,newTitle).then(data=>{
-            console.log(data)
             dispatch(updateTodoAC(todoId,newTitle))
         })
     }
