@@ -22,8 +22,7 @@ export const SuperSpan:React.FC<spanProps>=({value,callback})=>{
         setTitle(e.currentTarget.value)
     }
     return(
-        <div>
-            {open ? <input value={newTitle} onChange={valueHandler} onBlur={closeHandler}/>:  <span onClick={openHandler}>{value}</span>}
-        </div>
+            open ? <input value={newTitle} onChange={valueHandler} onBlur={closeHandler}/>:  <span onDoubleClick={openHandler}>{value}</span>
+
     )
 }

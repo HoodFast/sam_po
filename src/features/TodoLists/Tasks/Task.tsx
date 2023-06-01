@@ -1,5 +1,5 @@
 import React from "react";
-import {Button} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import {SuperSpan} from "../../../components/SuperSpan/SuperSpan";
 import {TaskStatuses} from "../../../api/todo-api";
 
@@ -34,11 +34,11 @@ export const Task: React.FC<TaskProps> = (
         updateStatusTask(todoId, taskId, newStatus)
     }
     return (
-        <div style={{margin: '10px', display: 'flex'}}>
+        <Typography>
             <input onChange={changeStatusTask} type={"checkbox"} checked={status === TaskStatuses.Completed}/>
             <SuperSpan callback={updateTaskHandler} value={taskTitle}/>
             <Button onClick={deleteTaskHandler}>x</Button>
-        </div>
+        </Typography>
 
     )
 }

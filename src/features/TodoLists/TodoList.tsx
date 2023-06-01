@@ -1,7 +1,18 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {AppUseDispatch, useAppSelector} from "../../App/store";
 import {changeTaskStatusTC, createTaskTC, fetchTasks, removeTaskTC, updateTaskTC} from "./Tasks/task-reduser";
-import {Box, Button, Grid, IconButton, Paper} from "@mui/material";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Button,
+    Grid,
+    IconButton,
+    Paper,
+    Typography
+} from "@mui/material";
 import {changeFilterAC, FilterType, removeToDo, updateTodoTitleTC} from "./todoList-reducer";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Task} from "./Tasks/Task";
@@ -27,8 +38,10 @@ export const TodoList: React.FC<PropsType> = ({
     useEffect(() => {
         dispatch(fetchTasks(todoListId))
     }, [])
-
-
+    const [openClose, setOpenClose] = useState(false)
+    const openHandler = () => {
+        setOpenClose(!openClose)
+    }
     const deleteToDo = () => {
         dispatch(removeToDo(todoListId))
     }
@@ -38,6 +51,10 @@ export const TodoList: React.FC<PropsType> = ({
 
     const createTask = (taskTitle: string) => {
         dispatch(createTaskTC(todoListId, taskTitle))
+        if (!openClose) {
+            setOpenClose(!openClose)
+        }
+
     }
 
     const deleteTask = (todoId: string, taskId: string) => {
@@ -55,14 +72,14 @@ export const TodoList: React.FC<PropsType> = ({
     let filterTasks = tasks[todoListId]
 
     if (filter === 'active') {
-        filterTasks = tasks[todoListId].filter(i => i.status ===  TaskStatuses.New)
+        filterTasks = tasks[todoListId].filter(i => i.status === TaskStatuses.New)
     }
     if (filter === 'completed') {
         filterTasks = tasks[todoListId].filter(i => i.status === TaskStatuses.Completed)
     }
 
 
-    const task =!!filterTasks && filterTasks.map(i => <Task
+    const task = !!filterTasks && filterTasks.map(i => <Task
         key={i.id}
         taskId={i.id}
         todoId={i.todoListId}
@@ -89,14 +106,22 @@ export const TodoList: React.FC<PropsType> = ({
                         </IconButton>
                     </div>
                     <AddForm callBack={createTask}/>
-                    <h2 style={{display: 'flex', justifyContent: 'center'}}>
-                        <span style={{verticalAlign: 'middle'}}>
-                            <SuperSpan value={title} callback={updateTodoTitle}/>
-                        </span>
-                    </h2>
-                    <div style={{display: 'flex', flexDirection: 'column'}}>
-                        {task}
-                    </div>
+
+                    <Accordion  expanded={openClose}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon/>}
+                            onClick={openHandler}
+                            id="panel1a-header"
+                        >
+                            <Typography>
+                                <SuperSpan value={title} callback={updateTodoTitle}/>
+                            </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            {task}
+                        </AccordionDetails>
+                    </Accordion>
+
 
                     <Button onClick={() => dispatch(changeFilterAC(todoListId, 'all'))}>ALL</Button>
                     <Button onClick={() => dispatch(changeFilterAC(todoListId, 'active'))}>Active</Button>
