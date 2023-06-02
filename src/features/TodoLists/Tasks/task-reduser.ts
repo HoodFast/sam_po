@@ -2,6 +2,7 @@ import {ResultCode, TaskPriorities, TaskStatuses, TaskType, todoAPI} from "../..
 import {Dispatch} from "redux";
 import {ADD_TODO, addToDoAC, REMOVE_TODO, removeTodoAC} from "../todoList-reducer";
 import {RootStateType} from "../../../App/store";
+import {setStatusAC} from "../../../App/app-reduser";
 
 const FETCH_TASKS = "FETCH_TASKS"
 const CREATE_TASK = "CREATE_TASK"
@@ -87,16 +88,20 @@ export const fetchTasks = (todoId: string) => {
 export const createTaskTC = (todoId: string, title: string) => {
     return (dispatch: Dispatch) => {
         todoAPI.createTask(todoId, title).then(data => {
+
             const task = data.data.item
             dispatch(createTaskAC(todoId, task))
+
         })
     }
 }
 
 export const removeTaskTC = (todoId: string, taskId: string) => {
     return (dispatch: Dispatch) => {
+
         todoAPI.removeTask(todoId, taskId).then(data => {
             dispatch(removeTaskAC(todoId, taskId))
+
         })
     }
 }
@@ -106,11 +111,13 @@ export const updateTaskTC = (todoId: string, taskId: string, title: string) => {
     return (dispatch: Dispatch, getState: () => RootStateType) => {
         const task = getState().tasks[todoId].find(i => i.id === taskId)
         if (task) {
+
             const updateTask: TaskType = {...task, title: title}
             todoAPI.updateTask(todoId, taskId, updateTask).then(data => {
                 if (data.resultCode === 0) {
                     dispatch(updateTaskAC(data.data.item.todoListId, data.data.item.id, data.data.item.title))
                 }
+
             })
         }
     }
@@ -118,6 +125,7 @@ export const updateTaskTC = (todoId: string, taskId: string, title: string) => {
 
 export const changeTaskStatusTC = (todoId: string, taskId: string,status:TaskStatuses)=>{
     return (dispatch:Dispatch,getState: () => RootStateType)=>{
+
         const task=getState().tasks[todoId].find(i => i.id === taskId)
         if(task) {
             const updateTask: TaskType = {...task, status}

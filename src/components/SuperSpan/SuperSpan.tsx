@@ -1,4 +1,5 @@
 import React, {ChangeEvent, useState} from "react";
+import {TextField} from "@mui/material";
 
 type spanProps={
     value:string
@@ -22,7 +23,7 @@ export const SuperSpan:React.FC<spanProps>=({value,callback})=>{
         setTitle(e.currentTarget.value)
     }
     return(
-            open ? <input value={newTitle} onChange={valueHandler} onBlur={closeHandler}/>:  <span onDoubleClick={openHandler}>{value}</span>
+            open ? <TextField value={newTitle} onChange={valueHandler} onBlur={closeHandler}/>:  <span onDoubleClick={openHandler} style={{margin:'10px'}}>{value}</span>
 
     )
 }

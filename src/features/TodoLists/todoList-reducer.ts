@@ -1,6 +1,6 @@
 import {todoAPI, ToDoType} from "../../api/todo-api";
 import {Dispatch} from "redux";
-import {setStatusAC} from "../../App/app-reduser";
+import {setStatusAC, statusType} from "../../App/app-reduser";
 
 export const ADD_TODO = 'ADD_TODO'
 const FETCH_TODO = 'FETCH_TODO'
@@ -9,15 +9,15 @@ const UPDATE_TODO_TITLE= 'UPDATE_TODO_TITLE'
 const CHANGE_FILTER = 'CHANGE_FILTER'
 
 export type FilterType = 'all'| 'active' | 'completed'
-export type ToDoDomainType = ToDoType & { filter: FilterType }
+export type ToDoDomainType = ToDoType & { filter: FilterType,status:statusType }
 
 
 export const todoListReducer = (state: ToDoDomainType[] = [], action: ToDoActionsType): ToDoDomainType[] => {
     switch (action.type) {
         case ADD_TODO:
-            return [{...action.payload.toDoList, filter: 'all'},...state]
+            return [{...action.payload.toDoList, filter: 'all', status:'idle'},...state]
         case FETCH_TODO:
-            return [...action.payload.toDoLists.map(tl => ({...tl, filter: 'all' as FilterType}))]
+            return [...action.payload.toDoLists.map(tl => ({...tl, filter: 'all' as FilterType,status:'idle'as statusType}))]
         case REMOVE_TODO:
             return state.filter(t => t.id !== action.payload.todoId)
         case UPDATE_TODO_TITLE:
@@ -58,9 +58,12 @@ export const changeFilterAC=(todoId:string,filter:FilterType)=>{
 
 
 export const fetchToDoLists = () => {
+
     return (dispatch: Dispatch) => {
+        dispatch(setStatusAC('loading'))
         todoAPI.getToDoLists().then((data) => {
             dispatch(fetchToDoAC(data))
+            dispatch(setStatusAC('success'))
         })
     }
 }
@@ -80,16 +83,20 @@ export const addTodo = (title: string) => {
 
 export const removeToDo = (todoId: string) => {
     return (dispatch: Dispatch) => {
+        dispatch(setStatusAC('loading'))
         todoAPI.removeToDo(todoId).then((data)=>{
             dispatch(removeTodoAC(todoId))
+            dispatch(setStatusAC('success'))
         })
     }
 }
 
 export const updateTodoTitleTC=(todoId: string,newTitle:string)=>{
     return (dispatch:Dispatch)=>{
+        dispatch(setStatusAC('loading'))
         todoAPI.updateToDoTitle(todoId,newTitle).then(data=>{
             dispatch(updateTodoAC(todoId,newTitle))
+            dispatch(setStatusAC('success'))
         })
     }
 }

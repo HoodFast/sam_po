@@ -92,7 +92,7 @@ export const TodoList: React.FC<PropsType> = ({
 
 
     return (
-        <Grid item style={{margin: '10px'}}>
+        <Grid item style={{margin: '20px'}}>
             <Box
                 sx={{
                     display: 'flex',
@@ -100,20 +100,24 @@ export const TodoList: React.FC<PropsType> = ({
                 }}
             >
                 <Paper elevation={3}>
+
                     <div style={{display: "flex", justifyContent: 'flex-end'}}>
+                        <h4>{title}</h4>
                         <IconButton size='small' onClick={deleteToDo}>
                             <DeleteIcon fontSize="inherit"/>
                         </IconButton>
                     </div>
-                    <AddForm callBack={createTask}/>
+                    <div style={{margin:'10px'}}>
+                        <AddForm title='NewTask' callBack={createTask}/>
+                    </div>
+
 
                     <Accordion  expanded={openClose}>
                         <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>}
-                            onClick={openHandler}
+                            expandIcon={<ExpandMoreIcon onClick={openHandler}/>}
                             id="panel1a-header"
                         >
-                            <Typography>
+                            <Typography variant="h5">
                                 <SuperSpan value={title} callback={updateTodoTitle}/>
                             </Typography>
                         </AccordionSummary>

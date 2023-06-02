@@ -1,10 +1,12 @@
 import { useFormik } from "formik"
 import React from "react";
+import {Button, TextField} from "@mui/material";
 
 type PropsAddForm={
+    title:string
     callBack:(value:string)=>void
 }
-export const AddForm:React.FC<PropsAddForm> = ({callBack}) => {
+export const AddForm:React.FC<PropsAddForm> = ({callBack,title}) => {
 
     const formik = useFormik({
         validate:(values)=>{
@@ -23,8 +25,8 @@ export const AddForm:React.FC<PropsAddForm> = ({callBack}) => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <input {...formik.getFieldProps('value')}/>
-            <button type={"submit"}>+</button>
+            <TextField label={title} variant="outlined" {...formik.getFieldProps('value')}/>
+            <Button type={"submit"} style={{height:'55px'}}>ADD</Button>
         </form>
 
     )

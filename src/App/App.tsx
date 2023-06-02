@@ -18,8 +18,11 @@ function App() {
         dispatch(addTodo(NewTitle))
     }
 
-    return <Container maxWidth="sm">
-        <AddForm callBack={addNewTodo}/>
+    return <Container style={{marginTop:'20px'}} fixed>
+        <div style={{margin:'20px'}}>
+            <AddForm title='Title' callBack={addNewTodo}/>
+        </div>
+
         {status === 'loading' && <LinearProgress/>}
         <ToDoLists/>
     </Container>
